@@ -1,0 +1,65 @@
+<!-- invoice.html -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt</title>
+    <script src="./products.js"></script>
+    <link rel="stylesheet" type="text/css" href="invoice.css">
+    <!--Request to server-->
+    
+</head>
+    <body>
+      <div class="jumbotron">
+        <div class="container text-center">
+        <h1><span id="top_title">Tassia's Familiars exports</span></h1>
+        <p>Please review the contents of the receipt carefully, if there are any issues please contact us immediately. </p>
+        </div>
+
+
+
+
+
+        <div class ="container">
+        <table class="table">
+            <tbody>
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Product</th>
+                  <th>Quantity Purchased</th>
+                  <th>Price</th>
+                  <th>Extended Price</th>
+              </tr>
+              </thead>
+              <tbody id="invoiceTable"></tbody>
+              <!-- Product rows will be added dynamically using JavaScript -->
+              </tbody>
+            
+              <tfoot>
+                <tr>
+                    <td colspan="4">Sub-total</td>
+                    <td id="subtotal_cell">$0.00</td>
+                </tr>
+                <tr>
+                    <td colspan="4">Magical Sales Tax</td>
+                    <td id="tax_cell">$0.00</td>
+                </tr>
+                <tr>
+                    <td colspan="4">Shipping</td>
+                    <td id="shipping_cell">$0.00</td>
+                </tr>
+                <tr>
+                    <td colspan="4"><strong>Total</strong></td>
+                    <td id="total_cell"><strong>$0.00</strong></td>
+                </tr>
+            </tfoot>
+            </table>
+          </div>
+
+
+
+                       <!--Javascript for invoice-->
+            <script src="invoice.js" type="module"></script>
+</body>
+</html>
