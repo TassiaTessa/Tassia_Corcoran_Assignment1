@@ -4,42 +4,42 @@
   "price": 350.00,  
   "type": "Fauna",
   "quantity_available": 4,
-  "image": "./images/Fox.jpg"
+  "image": "./images/Fox.JPG"
 } ,
 {
   "name":"Turf Tail",  
   "price": 247.00,  
   "type": "Limbo",
   "quantity_available": 3,
-  "image":"./Images/BoxCat.jpg"
+  "image":"./Images/BoxCat.JPG"
 } ,
 {  
   "name":"Fauna Ferret",  
   "price": 299.00,  
   "type": "Fauna",
   "quantity_available": 10,
-  "image":"./Images/Ferret.jpg"
+  "image":"./Images/Ferret.JPG"
 } ,
 {  
   "name":"Nessie",  
   "price": 575.00,  
   "type": "Limbo",
   "quantity_available": 19,
-  "image":"./Images/Nessie.jpg"
+  "image":"./Images/Nessie.JPG"
 } ,
 {  
   "name":"Deer",  
   "price": 200.00,  
   "type": "Limbo",
   "quantity_available": 8,
-  "image":"./Images/Deer.jpg"
+  "image":"./Images/Deer.JPG"
 } ,
 {  
   "name":"Fauna Cat",  
   "price": 150.00,  
   "type": "Fauna",
   "quantity_available": 4,
-  "image":"./Images/Cat.jpg"
+  "image":"./Images/Cat.JPG"
 } 
 ]
 
