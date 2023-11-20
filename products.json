@@ -4,7 +4,7 @@
   "price": 350.00,  
   "type": "Fauna",
   "quantity_available": 4,
-  "image": "./images/Fox.JPG"
+  "image": "./Images/Fox.JPG"
 } ,
 {
   "name":"Turf Tail",  
