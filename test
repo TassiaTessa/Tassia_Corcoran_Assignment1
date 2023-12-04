@@ -4,19 +4,20 @@ After too much time and much replacements of var I got it to a working point....
 
 It is a bit of a frankenstien between both classes (minus any var usages) and whenever I try to clean it up it breaks. I am sorry this code is so messy but please... if I continue to try and trouble shoot this I will expect you guys to buy me a wig because I will rip out all of my hair
 */
-//Importing the express.js framework
-const express = require('express');
-// Create an instance of the Express application called "app"
-// app will be used to define routes, handle requests, etc
+//Importing the express.js frameworkconst express = require('express');
 const app = express();
-const querystring = require('querystring');
-const { json } = require('body-parser');
+const path = require('path');
+const crypto = require('crypto');
+const fs = require('fs');
+const qs = require('querystring');
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, '/public')));
 
-let products = require(__dirname + '/products.json');
-products.forEach((prod, i) => { prod.total_sold = 0 });
+let products = require(path.join(__dirname, '/products.json'));
+products.forEach((product) => {
+    product.total_sold = 0;
+});
 
 // Middleware to log all requests
 app.all('*', function (request, response, next) {
@@ -24,76 +25,71 @@ app.all('*', function (request, response, next) {
     next();
 });
 
-// Route to serve products.js
-app.get("/products.js", function (request, response, next) {
+// Middleware to serve static files
+app.use(express.static(__dirname + '/public'));
+
+// Define a route for handling a GET request to the "/products.js" path
+app.get("/products.js", function (request, response) {
     response.type('.js');
-    let products_str = `let products = ${JSON.stringify(products)};`;
-    response.send(products_str);
+    let productsStr = `var products = ${JSON.stringify(products)};`;
+    response.send(productsStr);
 });
 
-// Route to serve product_data.js
-app.get("/product_data.js", function (request, response) {
-    response.type('.js');
-    let products_str = `let products = ${JSON.stringify(products)}`;
-    response.send(products_str);
-});
-
-// Route to process form submissions
-app.post("/process_form", function (request, response) {
-    console.log(request.body);
-    let errs = {};
-    let hasSelectedQuantities = false;
-
-    // Validate quantities
-    for (let i in products) {
-        let qty = request.body[`quantity_textbox${i}`];
-
-        if (isNonNegInt(qty) == false) {
-            errs[`quantity${i}_error`] = isNonNegInt(qty, true).join(',');
-        }
-
-        if (qty > products[i]["quantity_available"]) {
-            errs[`quantity${i}_available_error`] = "Quantity selected exceeds quantity available!";
-        }
-
-        if (qty > 0) {
-            hasSelectedQuantities = true;
-        }
-    }
-
-    // If no quantities selected, provide an error
-    if (!hasSelectedQuantities) {
-        errs["noquantities"] = "Please select some items";
-    }
-
-    // If no errors, update product data and redirect to invoice
-    if (JSON.stringify(errs) === '{}') {
-        for (i in products) {
-            products[i]["total_sold"] += Number(request.body[`quantity_textbox${i}`]);
-            products[i]["quantity_available"] -= request.body[`quantity_textbox${i}`];
-        }
-
-        response.redirect(`./invoice.html?` + querystring.stringify(request.body));
+// Function to validate the quantity
+function validateQuantity(quantity) {
+    if (isNaN(quantity)) {
+        return "Not a Number";
+    } else if (quantity < 0 && !Number.isInteger(quantity)) {
+        return "Negative Inventory & Not an Integer";
+    } else if (quantity < 0) {
+        return "Negative Inventory";
+    } else if (!Number.isInteger(quantity)) {
+        return "Not an Integer";
     } else {
-        // If errors, redirect back to products_display with errors
-        request.body["errs_object_json"] = JSON.stringify(errs);
-        response.redirect(`./products_display.html?` + querystring.stringify(request.body));
+        return "";
+    }
+}
+
+// Route to handle form submissions
+app.post("/process_form", function (request, response) {
+    let qtys = request.body['quantity_textbox'];
+    let valid = true;
+    let url = '';
+    let soldArray = [];
+
+    for (let i in qtys) {
+        let q = Number(qtys[i]);
+
+        if (validateQuantity(q) === '') {
+            if (products[i]['qty_available'] - q < 0) {
+                valid = false;
+                url += `&prod${i}=${q}`;
+            } else {
+                soldArray[i] = q;
+                url += `&prod${i}=${q}`;
+            }
+        } else {
+            valid = false;
+            url += `&prod${i}=${q}`;
+        }
+
+        if (url === `&prod0=0&prod1=0&prod2=0&prod3=0&prod4=0&prod5=0`) {
+            valid = false;
+        }
+    }
+
+    if (!valid) {
+        response.redirect(`products_display.html?error=true${url}`);
+    } else {
+        for (let i in qtys) {
+            products[i]['total_sold'] += soldArray[i];
+            products[i]['qty_available'] -= soldArray[i];
+        }
+        response.redirect('invoice.html?' + url);
     }
 });
 
-// Serve static files from public directory
-app.use(express.static('./public'));
+// ... (Add other routes from your first code snippet)
 
-// Start the server on port 8080
-app.listen(8080, () => console.log('listening on port 8080'));
-
-// Function to validate non-negative integers
-function isNonNegInt(q, returnErrors = false) {
-    errors = [];
-    if (Number(q) != q) errors.push('Not a number!');
-    else {
-        if (q < 0) errors.push('Negative value!');
-        if (parseInt(q) != q) errors.push('Not an integer!');
-    }
-    return returnErrors ? errors : (errors.length == 0);
-}
+// Start the server and listen on port 8080
+app.listen(8080, () => console.log('Listening on port 8080'));

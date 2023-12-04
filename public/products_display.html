@@ -1,3 +1,4 @@
+<!-- products_display.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,32 +8,39 @@
 </head>
 <body>
     <header>
-        <!-- Title of Store -->
-    </header>
+        <body>
+            <div class="top-heading">
+                <h1>Tassia's Familiar Emporium </h1>
+                <nav class="bottom-heading">
+                    <h2><a href="/login.html">Login</a></h2>
+                    <h2><a href="/index.html">Home</a></h2>
+                </nav>
+            </div>
+            
+            <!-- Title of Store -->
+        </header>
 
     <main>
-        <form name="qty_form" action="process_form" method="POST">
+        <form name="qty_form" action="/login.html" method="POST">
             <h1><span id="top_title"></span></h1>
             <div class="container">
                 <div class="row">
                     <!-- Product display content will be dynamically generated here -->
                 </div>
             </div>
-
+    
             <footer class="text-center py-4">
-                
                 <div class="row">
                     <div class="col">
                         <div class="btn-container">
-                            <button type="submit" class="btn btn-secondary" id="purchase">
-                            
-                            </button>
+                            <button type="submit" class="btn btn-secondary" id="purchase"></button>
                         </div>
+                    </div>
                 </div>
             </footer>
         </form>
     </main>
-
+    
     <script defer src="./products_display.js"></script>
-</body>
-</html>
+    </body>
+    </html>

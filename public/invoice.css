@@ -1,7 +1,7 @@
 /* invoice.css */
 
 .img-small {
-    max-width: 300px; /* Adjust the max-width as needed */
+    max-width: 100px; /* Adjust the max-width as needed */
     height: auto;
     position: relative;
     display: inline-block;

@@ -1,0 +1,64 @@
+<!-- login.html --><!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tassia's Familiar Emporium</title>
+        <link rel="stylesheet" type="text/css" href="login.css">
+        <script defer src="./login.js"></script>
+    </head>
+    <body>
+        <header class="top-heading">
+            <h1>Tassia's Familiar Emporium Login</h1>
+            <nav class="bottom-heading">
+                <h2><a href="/products_display.html">Products</a></h2>
+                <h2><a href="/index.html">Home</a></h2>
+            </nav>
+        </header>
+    
+        <div class="container">
+            <div class="centered-text">
+                <h2>Login Page</h2>
+    
+                <form action="/process_login" method="POST" name="login_form">
+                    <!-- Email Address -->
+                    <div class="form-group row">
+                        <label for="email" class="col-sm-3 col-form-label text-right">Email Address</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" name="email" id="email" placeholder="Enter email">
+                        </div>
+                    </div>
+    
+                    <!-- Password -->
+                    <div class="form-group row">
+                        <label for="password" class="col-sm-3 col-form-label text-right">Password</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" type="password" name="password" id="password" placeholder="Enter password">
+                            <input type="checkbox" id="showPasswordCheckbox"> Show Password
+                        </div>
+                    </div>
+    
+                    <!-- Error Message -->
+                    <div class="form-group row">
+                        <div class="col-sm-9 offset-sm-3" id="errorMessage" style="color: red;"></div>
+                    </div>
+    
+                    <!-- Login Button -->
+                    <div class="form-group row">
+                        <div class="col-sm-9 offset-sm-3">
+                            <input class="btn btn-primary" type="submit" value="Login">
+                        </div>
+                    </div>
+    
+                    <!-- Register Button -->
+                    <div class="form-group row">
+                        <div class="col-sm-9 offset-sm-3">
+                            Don't have an account? <a href="/register.html" class="link" style="text-decoration: underline;">Register</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+    </html>
+    
