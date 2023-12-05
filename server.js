@@ -1,19 +1,19 @@
 //server.js
-const express = require('express');
-const app = express();
-const path = require('path');
+// Importing modules
 const crypto = require('crypto');
+const express = require('express');
 const fs = require('fs');
 const qs = require('querystring');
 
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
+// Create Express application
+const app = express();
 
 // Middleware for all routes
 app.all('*', function (request, response, next) {
     //console.log(request.method + ' to ' + request.path);
     next();
 });
+
 // Serve static files from the 'public' directory
 app.use(express.static(__dirname + '/public'));
 
@@ -102,9 +102,9 @@ app.post("/process_purchase", function (request, response) {
             temp_user[`qty${[i]}`] = POST[`qty${[i]}`];
         }
 
-        let params = new URLSearchParams(temp_user);
-        console.log(params);
+        let params = new URLSearchParams(Object.entries(temp_user).filter(([key, value]) => value !== undefined));
         response.redirect(`./login.html?${params.toString()}`);
+        
     } else if (Object.keys(errorObject).length > 0) {
         response.redirect("./products_display.html?" + qs.stringify(POST) + `&inputError`);
     } else {
@@ -113,7 +113,6 @@ app.post("/process_purchase", function (request, response) {
         }
     }
 });
-
 // Process login form
 app.post('/process_login', (request, response) => {
     let POST = request.body;
@@ -129,15 +128,22 @@ app.post('/process_login', (request, response) => {
     if (user_data[entered_email]) {
         const [storedSalt, storedHash] = user_data[entered_email].password.split(':');
         const enteredHash = crypto.pbkdf2Sync(entered_password, storedSalt, 10000, 512, 'sha256').toString('hex');
-
         if (enteredHash === storedHash) {
             temp_user['email'] = entered_email;
             temp_user['name'] = user_data[entered_email].name;
 
-            console.log(temp_user);
+            // Add the selected product information to temp_user
+            for (let i in products) {
+                temp_user[`qty${[i]}`] = POST[`qty${[i]}`] || 0;  // Set to 0 if undefined
+            }
 
-            let params = new URLSearchParams(temp_user);
-            response.redirect(`./invoice.html?valid&${params.toString()}`);
+            // Redirect to the invoice page with the updated temp_user data
+            let params = new URLSearchParams();
+            for (let i in products) {
+                params.set(`qty${i}`, temp_user[`qty${i}`] || 0);
+            }
+            response.redirect(`./invoice.html?valid&name=${temp_user.name}&${params.toString()}`);
+
             return;
         } else {
             request.query.loginError = 'Incorrect password';
@@ -154,32 +160,18 @@ app.post('/process_login', (request, response) => {
 // Process continue shopping form
 app.post("/continue_shopping", function (request, response) {
     let params = new URLSearchParams(temp_user);
-    response.redirect(`/products_display.html?${params.toString()}`);
-});// Process purchase logout form
-app.post("/purchase_logout", function (request, response) {
+
+    // Include product quantities in the URL
     for (let i in products) {
-        products[i].qty_sold += Number(temp_user[`qty${[i]}`]);
-        products[i].quantity_available = products[i].quantity_available - Number(temp_user[`qty${[i]}`]);
+        params.set(`qty${i}`, temp_user[`qty${i}`]);
     }
 
-    fs.writeFile(__dirname + '/products.json', JSON.stringify(products), 'utf-8', (error) => {
-        if (error) {
-            console.log('Error updating products', error);
-        } else {
-            console.log('File written successfully. Products are updated.');
-        }
-    });
-
-    delete temp_user['email'];
-    delete temp_user['name'];
-
-    // Assuming you want to redirect to the invoice page
-    response.redirect('./invoice.html');
+    response.redirect(`/products_display.html?${params.toString()}`);
 });
 
 // Assuming you want to pass the order information to the invoice page
-// Assuming you want to pass the order information to the invoice page
 app.get('/invoice', function (request, response) {
+    console.log("Query parameters in the invoice route:", request.query);
     // Retrieve order information from the request query
     let order = [];
     for (let i in products) {

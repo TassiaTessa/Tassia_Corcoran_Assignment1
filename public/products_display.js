@@ -33,17 +33,30 @@ document.addEventListener('DOMContentLoaded', function () {
             validateQuantity(event.target);
         }
     });
-
-    // Function to handle form submission
     function handleSubmit(event) {
         event.preventDefault();
-
-        // Redirect to the login page
-        window.location.href = '/login.html';
+    
+        // Collect selected quantities
+        const selectedQuantities = [];
+        for (let i = 0; i < products.length; i++) {
+            const quantity = document.getElementById(`${i}`).value;
+            selectedQuantities.push(quantity);
+        }
+    
+        // Append selected quantities to the form data
+        const formData = new FormData(document.forms['qty_form']);
+        selectedQuantities.forEach((quantity, index) => {
+            formData.append(`qty${index}`, quantity);
+        });
+    
+        // Redirect to the login page with the updated form data
+        window.location.href = `/login.html?${new URLSearchParams(formData).toString()}`;
     }
-
+    
+    
     // Event listener for form submission
     document.querySelector('form[name="qty_form"]').addEventListener('submit', handleSubmit);
+    
 });
 
 // Function to get the order array from URL parameters
