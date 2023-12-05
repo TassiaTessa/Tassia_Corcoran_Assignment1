@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Receipt</title>
+        <script src="./products.js"></script>
+        <script src="invoice.js" type="module"></script>
+        <link rel="stylesheet" type="text/css" href="invoice.css">
+    </head>
+    <body>
+        <div class="container text-center">
+            <h1><span id="top_title">Tassia's Familiars exports</span></h1>
+            <p>Please review the contents of the receipt carefully; if there are any issues, please contact us immediately.</p>
+        </div>
+
+        <div class="container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Quantity Purchased</th>
+                        <th>Price</th>
+                        <th>Extended Price</th>
+                    </tr>
+                </thead>
+                <tbody id="invoiceTableBody"></tbody>
+                <!-- Product rows will be added dynamically using JavaScript -->
+
+                <tfoot>
+                    <tr>
+                        <td colspan="4">Sub-total</td>
+                        <td id="subtotal_cell">$0.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">Magical Sales Tax</td>
+                        <td id="tax_cell">$0.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">Shipping</td>
+                        <td id="shipping_cell">$0.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><strong>Total</strong></td>
+                        <td id="total_cell"><strong>$0.00</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><strong>Total</strong></td>
+                        <td id="total_display"><strong>$0.00</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div id="helloMsg"></div>
+
+        <script>
+            window.onload = function () {
+                // Get the URL parameters
+                let params = new URLSearchParams(window.location.search);
+
+                // Check if 'valid' parameter is present
+                if (!params.has('valid')) {
+                    // Handle the case when no valid parameter is present
+                    document.getElementById('helloMsg').innerHTML = `
+                        <h2 style="text-align: center; margin-top: 10%;">ERROR: No form submission detected.</h2>
+                        <h4 style="text-align: center;">Return to <a href="homepage.html">Home</a></h4>
+                    `;
+                } else {
+                    document.getElementById('helloMsg').innerHTML = `Thank you for your purchase ${params.get('name')}! Come back for more!`;
+
+                    // Display the product details in the table
+                    displayProductsInTable(params);
+                }
+            };
+        </script>
+    </body>
+</html>
