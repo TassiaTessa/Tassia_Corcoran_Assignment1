@@ -1,0 +1,89 @@
+<!--register.html-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tassia's Familiar Emporium Registration</title>
+    <link rel="stylesheet" type="text/css" href="register.css">
+    <script defer src="./products.js"></script>
+</head>
+
+<body>
+    <header class="top-heading">
+        <h1>Tassia's Familiar Emporium Register</h1>
+        <nav class="bottom-heading">
+            <h2><a href="/products_display.html">Products</a></h2>
+            <h2><a href="/index.html">Home</a></h2>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="centered-text">
+            <h2>Registration</h2>
+
+            <!-- Form for user registration -->
+            <form action="/process_register" method="POST" name="register_form">
+
+                <!-- Use a table for layout -->
+                <table class="form-table">
+
+                    <!-- Row for Name -->
+                    <tr class="form-group">
+                        <td class="label-cell">
+                            <label for="name">Name</label>
+                        </td>
+                        <td class="input-cell">
+                            <input type="text" class="input" name="name" id="name" placeholder="Enter Name">
+                        </td>
+                        <td class="error-cell" id="name_error"></td>
+                    </tr>
+
+                    <!-- Row for Email Address -->
+                    <tr class="form-group">
+                        <td class="label-cell">
+                            <label for="email">Email Address</label>
+                        </td>
+                        <td class="input-cell">
+                            <input type="text" class="input" name="email" id="email" placeholder="Enter Email Address">
+                        </td>
+                        <td class="error-cell" id="email_error"></td>
+                    </tr>
+
+                    <!-- Row for Password -->
+                    <tr class="form-group">
+                        <td class="label-cell">
+                            <label for="password">Password</label>
+                        </td>
+                        <td class="input-cell">
+                            <input type="password" class="input" name="password" id="password" placeholder="Enter Password">
+                        </td>
+                        <td class="error-cell" id="password_error"></td>
+                    </tr>
+
+                    <!-- Row for Confirm Password -->
+                    <tr class="form-group">
+                        <td class="label-cell">
+                            <label for="confirm_password">Confirm Password</label>
+                        </td>
+                        <td class="input-cell">
+                            <input type="password" class="input" name="confirm_password" id="confirm_password" placeholder="Confirm Password">
+                        </td>
+                        <td class="error-cell" id="confirm_password_error"></td>
+                    </tr>
+                </table>
+
+                <!-- Button for submitting the form -->
+                <button type="submit">Sign Up</button>
+            </form>
+
+            <!-- Link to the login page -->
+            <a href="/login.html">Already have an account? Log in over here!</a>
+        </div>
+    </div>
+
+    <script defer src="register.js"></script>
+</body>
+
+</html>

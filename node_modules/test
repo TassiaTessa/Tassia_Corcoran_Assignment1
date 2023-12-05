@@ -1,0 +1,95 @@
+/*So basically I worked with someone who took Ports class to make this because my base code was just not working.... 
+
+After too much time and much replacements of var I got it to a working point....
+
+It is a bit of a frankenstien between both classes (minus any var usages) and whenever I try to clean it up it breaks. I am sorry this code is so messy but please... if I continue to try and trouble shoot this I will expect you guys to buy me a wig because I will rip out all of my hair
+*/
+//Importing the express.js frameworkconst express = require('express');
+const app = express();
+const path = require('path');
+const crypto = require('crypto');
+const fs = require('fs');
+const qs = require('querystring');
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '/public')));
+
+let products = require(path.join(__dirname, '/products.json'));
+products.forEach((product) => {
+    product.total_sold = 0;
+});
+
+// Middleware to log all requests
+app.all('*', function (request, response, next) {
+    console.log(request.method + ' to ' + request.path);
+    next();
+});
+
+// Middleware to serve static files
+app.use(express.static(__dirname + '/public'));
+
+// Define a route for handling a GET request to the "/products.js" path
+app.get("/products.js", function (request, response) {
+    response.type('.js');
+    let productsStr = `var products = ${JSON.stringify(products)};`;
+    response.send(productsStr);
+});
+
+// Function to validate the quantity
+function validateQuantity(quantity) {
+    if (isNaN(quantity)) {
+        return "Not a Number";
+    } else if (quantity < 0 && !Number.isInteger(quantity)) {
+        return "Negative Inventory & Not an Integer";
+    } else if (quantity < 0) {
+        return "Negative Inventory";
+    } else if (!Number.isInteger(quantity)) {
+        return "Not an Integer";
+    } else {
+        return "";
+    }
+}
+
+// Route to handle form submissions
+app.post("/process_form", function (request, response) {
+    let qtys = request.body['quantity_textbox'];
+    let valid = true;
+    let url = '';
+    let soldArray = [];
+
+    for (let i in qtys) {
+        let q = Number(qtys[i]);
+
+        if (validateQuantity(q) === '') {
+            if (products[i]['qty_available'] - q < 0) {
+                valid = false;
+                url += `&prod${i}=${q}`;
+            } else {
+                soldArray[i] = q;
+                url += `&prod${i}=${q}`;
+            }
+        } else {
+            valid = false;
+            url += `&prod${i}=${q}`;
+        }
+
+        if (url === `&prod0=0&prod1=0&prod2=0&prod3=0&prod4=0&prod5=0`) {
+            valid = false;
+        }
+    }
+
+    if (!valid) {
+        response.redirect(`products_display.html?error=true${url}`);
+    } else {
+        for (let i in qtys) {
+            products[i]['total_sold'] += soldArray[i];
+            products[i]['qty_available'] -= soldArray[i];
+        }
+        response.redirect('invoice.html?' + url);
+    }
+});
+
+// ... (Add other routes from your first code snippet)
+
+// Start the server and listen on port 8080
+app.listen(8080, () => console.log('Listening on port 8080'));
